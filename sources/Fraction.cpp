@@ -38,22 +38,29 @@ int Fraction::gcd(int a, int b) {
 }
 
 Fraction operator+(const Fraction &fraction1, const Fraction &fraction2) {
-    int temp_num = fraction1._numerator * fraction2._denominator +
-                   fraction1._denominator * fraction2._numerator;
-    int temp_den = fraction1._denominator * fraction2._denominator;
-    return Fraction(temp_num, temp_den);
+    int new_num = fraction1._numerator * fraction2._denominator +
+                  fraction1._denominator * fraction2._numerator;
+    int new_den = fraction1._denominator * fraction2._denominator;
+    return Fraction(new_num, new_den);
 }
 
 Fraction operator-(const Fraction &fraction1, const Fraction &fraction2) {
-    return Fraction(0, 1);
+    int new_num = fraction1._numerator * fraction2._denominator -
+                  fraction1._denominator * fraction2._numerator;
+    int new_den = fraction1._denominator * fraction2._denominator;
+    return Fraction(new_num, new_den);
 }
 
 Fraction operator*(const Fraction &fraction1, const Fraction &fraction2) {
-    return Fraction(0, 1);
+    int new_num = fraction1._numerator * fraction2._numerator;
+    int new_den = fraction1._denominator * fraction2._denominator;
+    return Fraction(new_num, new_den);
 }
 
 Fraction operator/(const Fraction &fraction1, const Fraction &fraction2) {
-    return Fraction(0, 1);
+    int new_num = fraction1._numerator * fraction2._denominator;
+    int new_den = fraction1._denominator * fraction2._numerator;
+    return Fraction(new_num, new_den);
 }
 
 bool operator==(const Fraction &fraction1, const Fraction &fraction2) {
@@ -61,19 +68,19 @@ bool operator==(const Fraction &fraction1, const Fraction &fraction2) {
 }
 
 bool operator>(const Fraction &fraction1, const Fraction &fraction2) {
-    return false;
+    return fraction1._numerator * fraction2._denominator > fraction2._numerator * fraction1._denominator;
 }
 
 bool operator<(const Fraction &fraction1, const Fraction &fraction2) {
-    return false;
+    return fraction1._numerator * fraction2._denominator < fraction2._numerator * fraction1._denominator;
 }
 
 bool operator>=(const Fraction &fraction1, const Fraction &fraction2) {
-    return false;
+    return fraction1._numerator * fraction2._denominator >= fraction2._numerator * fraction1._denominator;
 }
 
 bool operator<=(const Fraction &fraction1, const Fraction &fraction2) {
-    return false;
+    return fraction1._numerator * fraction2._denominator <= fraction2._numerator * fraction1._denominator;
 }
 
 Fraction &Fraction::operator++() {// pre-increment

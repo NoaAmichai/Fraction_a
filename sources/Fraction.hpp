@@ -8,13 +8,13 @@ namespace ariel {}
 
     private:
         int _numerator, _denominator;
-
         int gcd(int num, int den);
+        void reduce();
 
     public:
         Fraction(int num, int den);
         Fraction(float flt);
-        void reduce();
+
 
         friend Fraction operator+(const Fraction &fraction1, const Fraction &fraction2);
         friend Fraction operator-(const Fraction &fraction1, const Fraction &fraction2);
