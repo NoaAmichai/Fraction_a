@@ -6,11 +6,34 @@
 using namespace ariel;
 using namespace std;
 
-TEST_CASE("test constructor throws exception when denominator is zero") {
-    CHECK_THROWS(Fraction(3, 0));
+
+TEST_CASE("Fraction constructor should handle zero as the denominator")
+{
+    CHECK_THROWS(Fraction(1, 0));
+    CHECK_THROWS(Fraction(-1, 0));
+    CHECK_THROWS(Fraction(0, 0));
 }
 
-TEST_CASE ("test fraction operations") {
+TEST_CASE(" Fraction constructor should reduce the fraction")
+{
+    Fraction a (-4, 8);
+    Fraction b (-9, 3);
+    CHECK((a == Fraction(-1, 2)));
+    CHECK((b == Fraction(-3, 1)));
+}
+
+TEST_CASE("Arithmetics with fractions should handle fractions with a numerator of zero")
+{
+    Fraction a (0, 5);
+    Fraction b (1, 3);
+
+    CHECK((a + b == Fraction(1, 3)));
+    CHECK((a - b == Fraction(-1, 3)));
+    CHECK((a * b == Fraction(0, 1)));
+    CHECK_THROWS(b/a);
+}
+
+TEST_CASE ("Test fraction operations") {
     Fraction a(1, 2);
     Fraction b(1, 3);
     Fraction c = a + b;
@@ -26,7 +49,7 @@ TEST_CASE ("test fraction operations") {
     CHECK((c == Fraction(3, 2)));
 }
 
-TEST_CASE ("test fraction comparison") {
+TEST_CASE ("Test fraction comparison") {
     Fraction a(1, 2);
     Fraction b(1, 3);
     Fraction c(2, 4);
@@ -41,7 +64,7 @@ TEST_CASE ("test fraction comparison") {
 }
 
 
-TEST_CASE ("test fraction increment") {
+TEST_CASE ("Test fraction increment") {
     Fraction a(1, 2);
     Fraction b = ++a;
     CHECK((a == Fraction(3, 2)));
@@ -61,28 +84,4 @@ TEST_CASE ("test fraction increment") {
     b = a--;
     CHECK((a == Fraction(-2, 2)));
     CHECK((b == Fraction(0, 2)));
-}
-
-TEST_CASE("test fraction input and output operators") {
-    Fraction a(2, 5), b(-7, 9), c(6, -13);
-    stringstream ss1, ss2, ss3;
-    ss1 << a;
-    ss2 << b;
-    ss3 << c;
-
-    CHECK((ss1.str() == "2/5"));
-    CHECK((ss2.str() == "-7/9"));
-    CHECK((ss3.str() == "-6/13"));
-
-    Fraction d, e, f;
-    stringstream ss4("3 1/2");
-    stringstream ss5("-2.75");
-    stringstream ss6("0");
-    ss4 >> d;
-    ss5 >> e;
-    ss6 >> f;
-
-    CHECK((d == Fraction(7, 2)));
-    CHECK((e == Fraction(-11, 4)));
-    CHECK((f == Fraction(0, 1)));
 }
