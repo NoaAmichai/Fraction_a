@@ -7,7 +7,7 @@
 using namespace std;
 
 Fraction::Fraction(int num, int den) : _numerator(num), _denominator(den) {
-    if (_denominator == 0) throw invalid_argument("Denominator can not be zero");
+    if (_denominator == 0) throw invalid_argument("Cannot divide by zero");
     reduce();
 }
 
@@ -24,12 +24,14 @@ Fraction::Fraction(float number) {
     reduce();
 }
 
+// Reduces the fraction to its simplest form
 void Fraction::reduce() {
     int g = gcd(_numerator, _denominator);
     _numerator = _numerator / g;
     _denominator = _denominator / g;
 }
 
+// Calculates the greatest common divisor (GCD) of two integers
 int Fraction::gcd(int a, int b) {
     if (b == 0) {
         return a;
@@ -58,6 +60,7 @@ Fraction operator*(const Fraction &fraction1, const Fraction &fraction2) {
 }
 
 Fraction operator/(const Fraction &fraction1, const Fraction &fraction2) {
+    if (fraction2._numerator == 0) throw invalid_argument("Cannot divide by zero");
     int new_num = fraction1._numerator * fraction2._denominator;
     int new_den = fraction1._denominator * fraction2._numerator;
     return Fraction(new_num, new_den);
@@ -83,33 +86,37 @@ bool operator<=(const Fraction &fraction1, const Fraction &fraction2) {
     return fraction1._numerator * fraction2._denominator <= fraction2._numerator * fraction1._denominator;
 }
 
-Fraction &Fraction::operator++() {// pre-increment
+// pre-increment
+Fraction &Fraction::operator++() {
     _numerator += _denominator;
     reduce();
     return *this;
 }
 
-Fraction Fraction::operator++(int) {// post-increment
+// post-increment
+Fraction Fraction::operator++(int) {
     int temp_num = _numerator;
     int temp_den = _denominator;
     _numerator += _denominator;
     reduce();
     return Fraction(temp_num, temp_den);
 }
-
-Fraction &Fraction::operator--() {// pre-increment
+// pre-increment
+Fraction &Fraction::operator--() {
     _numerator -= _denominator;
     reduce();
     return *this;
 }
 
-Fraction Fraction::operator--(int) {// post-increment
+// post-increment
+Fraction Fraction::operator--(int) {
     int temp_num = _numerator;
     int temp_den = _denominator;
     _numerator -= _denominator;
     reduce();
     return Fraction(temp_num, temp_den);
 }
+
 
 std::ostream &operator<<(ostream &output, const Fraction &fraction) {
     output << ' ' << fraction._numerator << '/' << fraction._denominator << ' ';
