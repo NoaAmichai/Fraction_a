@@ -1,13 +1,11 @@
-#include "Fraction.hpp"
-#include <stdexcept>
 #include <cmath>
-
+#include "Fraction.hpp"
 using namespace std;
+
 namespace ariel {
 
-
     Fraction::Fraction(int num, int den) : _numerator(num), _denominator(den) {
-        if (_denominator == 0) throw invalid_argument("Cannot divide by zero");
+        if (den == 0) throw invalid_argument("Cannot divide by zero");
         reduce();
     }
 
