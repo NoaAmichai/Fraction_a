@@ -1,8 +1,10 @@
-#pragma once
-
+#include <stdexcept>
+#include <string>
+#include <sstream>
+#include <fstream>
 #include <iostream>
 
-namespace ariel {}
+namespace ariel {
 
     class Fraction {
 
@@ -36,4 +38,4 @@ namespace ariel {}
         friend std::istream &operator>>(std::istream &input, Fraction &fraction);
 
     };
-
+}
