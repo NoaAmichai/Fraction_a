@@ -1,13 +1,15 @@
 #include <cmath>
 #include "Fraction.hpp"
-using namespace std;
 
+using namespace std;
 namespace ariel {
 
     Fraction::Fraction(int num, int den) : _numerator(num), _denominator(den) {
         if (den == 0) throw invalid_argument("Cannot divide by zero");
         reduce();
     }
+
+    Fraction::Fraction() : _numerator(0), _denominator(1) {}
 
     Fraction::Fraction(float number) {
         int precision = 1000;
@@ -20,6 +22,14 @@ namespace ariel {
         this->_numerator = numerator;
         this->_denominator = denominator;
         reduce();
+    }
+
+    int Fraction::getNumerator() const {
+        return _numerator;
+    }
+
+    int Fraction::getDenominator() const {
+        return _denominator;
     }
 
 // Reduces the fraction to its simplest form
@@ -68,23 +78,23 @@ namespace ariel {
         return (fraction1._numerator == fraction2._numerator && fraction1._denominator == fraction2._denominator);
     }
 
-    bool operator>(const Fraction &fraction1, const Fraction &fraction2) {
-        return fraction1._numerator * fraction2._denominator > fraction2._numerator * fraction1._denominator;
-    }
-
     bool operator<(const Fraction &fraction1, const Fraction &fraction2) {
         return fraction1._numerator * fraction2._denominator < fraction2._numerator * fraction1._denominator;
     }
 
+    bool operator>(const Fraction &fraction1, const Fraction &fraction2) {
+        return fraction2 < fraction1;
+    }
+
     bool operator>=(const Fraction &fraction1, const Fraction &fraction2) {
-        return fraction1._numerator * fraction2._denominator >= fraction2._numerator * fraction1._denominator;
+        return !(fraction1 < fraction2);
     }
 
     bool operator<=(const Fraction &fraction1, const Fraction &fraction2) {
-        return fraction1._numerator * fraction2._denominator <= fraction2._numerator * fraction1._denominator;
+        return !(fraction1 > fraction2);
     }
 
-// pre-increment
+    // pre-increment
     Fraction &Fraction::operator++() {
         _numerator += _denominator;
         reduce();
@@ -118,13 +128,21 @@ namespace ariel {
 
 
     std::ostream &operator<<(ostream &output, const Fraction &fraction) {
-        output << ' ' << fraction._numerator << '/' << fraction._denominator << ' ';
+        output << fraction._numerator << '/' << fraction._denominator;
         return output;
     }
 
-    std::istream &operator>>(istream &input, Fraction &fraction) {
-        char slash;
-        input >> fraction._numerator >> slash >> fraction._denominator;
+    std::istream &operator>>(std::istream &input, Fraction &fraction) {
+//        char comma_or_space;
+        if (!(input >> fraction._numerator)) {
+            throw std::invalid_argument("Invalid numerator");
+        }
+//        if (!(input >> comma_or_space) || (comma_or_space != ',' && comma_or_space != ' ')) {
+//            throw std::invalid_argument("Invalid separator");
+//        }
+        if (!(input >> fraction._denominator)) {
+            throw std::invalid_argument("Invalid denominator");
+        }
         fraction.reduce();
         return input;
     }
