@@ -22,6 +22,8 @@ namespace ariel {
         int getNumerator() const;
         int getDenominator() const;
 
+        void checkOverflow(long numerator_sum, long denominator_sum) const;
+
         Fraction operator+(const Fraction &other) const;
         Fraction operator+(const float &number) const;
         friend Fraction operator+(const float &number, const Fraction &other);
