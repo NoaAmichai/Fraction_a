@@ -11,54 +11,41 @@ namespace ariel {
 
     private:
         int _numerator, _denominator;
+
         int gcd(int num, int den);
+
         void reduce();
 
     public:
         Fraction();
+
         Fraction(int num, int den);
+
         Fraction(float number);
 
         int getNumerator() const;
+
         int getDenominator() const;
 
-        void checkOverflow(long numerator_sum, long denominator_sum) const;
 
-        Fraction operator+(const Fraction &other) const;
-        Fraction operator+(const float &number) const;
-        friend Fraction operator+(const float &number, const Fraction &other);
+        friend Fraction operator+(const Fraction &fraction1, const Fraction &fraction2);
 
-        Fraction operator-(const Fraction &other) const;
-        Fraction operator-(const float &number) const;
-        friend Fraction operator-(const float &number, const Fraction &other);
+        friend Fraction operator-(const Fraction &fraction1, const Fraction &fraction2);
 
-        Fraction operator*(const Fraction &other) const;
-        Fraction operator*(const float &number) const;
-        friend Fraction operator*(const float &number, const Fraction &other);
+        friend Fraction operator/(const Fraction &fraction1, const Fraction &fraction2);
 
-        Fraction operator/(const Fraction &other) const;
-        Fraction operator/(const float &number) const;
-        friend Fraction operator/(const float &number, const Fraction &other);
+        friend Fraction operator*(const Fraction &fraction1, const Fraction &fraction2);
 
-        bool operator==(const Fraction &other) const;
-        bool operator==(const float &number) const;
-        friend bool operator==(const float &number, const Fraction &other);
+        friend bool operator==(const Fraction &fraction1, const Fraction &fraction2);
 
-        bool operator>(const Fraction &other) const;
-        bool operator>(const float &number) const;
-        friend bool operator>(const float &number, const Fraction &other);
+        friend bool operator>(const Fraction &fraction1, const Fraction &fraction2);
 
-        bool operator<(const Fraction &other) const;
-        bool operator<(const float &number) const;
-        friend bool operator<(const float &number, const Fraction &other);
+        friend bool operator<(const Fraction &fraction1, const Fraction &fraction2);
 
-        bool operator>=(const Fraction &other) const;
-        bool operator>=(const float &number) const;
-        friend bool operator>=(const float &number, const Fraction &other);
+        friend bool operator>=(const Fraction &fraction1, const Fraction &fraction2);
 
-        bool operator<=(const Fraction &other) const;
-        bool operator<=(const float &number) const;
-        friend bool operator<=(const float &number, const Fraction &other);
+        friend bool operator<=(const Fraction &fraction1, const Fraction &fraction2);
+
 
         Fraction &operator++();  // pre-increment ++a
         Fraction operator++(int); // post-increment a++
@@ -66,6 +53,10 @@ namespace ariel {
         Fraction operator--(int); // post-decrement a--
 
         friend std::ostream &operator<<(std::ostream &output, const Fraction &fraction);
+
         friend std::istream &operator>>(std::istream &input, Fraction &fraction);
+
     };
+
+    void checkOverflow(long numerator_sum, long denominator_sum);
 }

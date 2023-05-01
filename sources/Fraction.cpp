@@ -4,7 +4,6 @@
 
 using namespace std;
 namespace ariel {
-
     Fraction::Fraction() : _numerator(0), _denominator(1) {}
 
     Fraction::Fraction(int num, int den) : _numerator(num), _denominator(den) {
@@ -14,27 +13,10 @@ namespace ariel {
         if (num > INT_MAX || den > INT_MAX) {
             throw overflow_error("Numerator or denominator is too large.");
         }
-        if (den < 0) {
-            _numerator = -1 * num;
-            _denominator = abs(den);
-        }
         reduce();
     }
 
-    Fraction::Fraction(float number) {
-        int denominator = 1000;
-        int numerator = round(number * denominator);
-        while (numerator % 10 == 0 && denominator % 10 == 0) {
-            numerator /= 10;
-            denominator /= 10;
-        }
-        if (denominator < 0) {
-            _numerator = -1 * numerator;
-            _denominator = abs(denominator);
-        } else {
-            _numerator = numerator;
-            _denominator = denominator;
-        }
+    Fraction::Fraction(float number) : _numerator(number * 1000), _denominator(1000) {
         reduce();
     }
 
@@ -51,6 +33,10 @@ namespace ariel {
         int g = gcd(_numerator, _denominator);
         _numerator = _numerator / g;
         _denominator = _denominator / g;
+        if (_denominator < 0) {
+            _numerator = -1 * _numerator;
+            _denominator = -1 * _denominator;
+        }
     }
 
 // Calculates the greatest common divisor (GCD) of two integers
@@ -58,137 +44,78 @@ namespace ariel {
         return b == 0 ? a : gcd(b, a % b);
     }
 
-    Fraction Fraction::operator+(const Fraction &other) const {
+    Fraction operator+(const Fraction &fraction1, const Fraction &fraction2) {
         long numerator_sum =
-                static_cast<long>(_numerator) * other._denominator + static_cast<long>(other._numerator) * _denominator;
-        long denominator_sum = static_cast<long>(_denominator) * other._denominator;
+                static_cast<long>(fraction1._numerator) * fraction2._denominator +
+                static_cast<long>(fraction2._numerator) * fraction1._denominator;
+        long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
         checkOverflow(numerator_sum, denominator_sum);
-        int new_num = _numerator * other._denominator +
-                      _denominator * other._numerator;
-        int new_den = _denominator * other._denominator;
-        return Fraction(new_num, new_den);
+        int new_num = fraction1._numerator * fraction2._denominator +
+                      fraction1._denominator * fraction2._numerator;
+        int new_den = fraction1._denominator * fraction2._denominator;
+        Fraction res(new_num, new_den);
+        res.reduce();
+        return res;
     }
 
-    Fraction Fraction::operator+(const float &number) const {
-        return *this + Fraction(number);
-    }
 
-    Fraction operator+(const float &number, const Fraction &other) {
-        return Fraction(number) + other;
-    }
-
-    Fraction Fraction::operator-(const Fraction &other) const {
+    Fraction operator-(const Fraction &fraction1, const Fraction &fraction2) {
         long numerator_sum =
-                static_cast<long>(_numerator) * other._denominator - static_cast<long>(other._numerator) * _denominator;
-        long denominator_sum = static_cast<long>(_denominator) * other._denominator;
+                static_cast<long>(fraction1._numerator) * fraction2._denominator -
+                static_cast<long>(fraction2._numerator) * fraction1._denominator;
+        long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
         checkOverflow(numerator_sum, denominator_sum);
-        int new_num = _numerator * other._denominator -
-                      _denominator * other._numerator;
-        int new_den = _denominator * other._denominator;
-        return Fraction(new_num, new_den);
+        int new_num = fraction1._numerator * fraction2._denominator -
+                      fraction1._denominator * fraction2._numerator;
+        int new_den = fraction1._denominator * fraction2._denominator;
+        Fraction res(new_num, new_den);
+        res.reduce();
+        return res;
     }
 
-    Fraction Fraction::operator-(const float &number) const {
-        return *this - Fraction(number);
-    }
-
-    Fraction operator-(const float &number, const Fraction &other) {
-        return Fraction(number) - other;
-    }
-
-    Fraction Fraction::operator*(const Fraction &other) const {
-        long numerator_sum = static_cast<long>(_numerator) * other._numerator;
-        long denominator_sum = static_cast<long>(_denominator) * other._denominator;
+    Fraction operator*(const Fraction &fraction1, const Fraction &fraction2) {
+        long numerator_sum = static_cast<long>(fraction1._numerator) * fraction2._numerator;
+        long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
         checkOverflow(numerator_sum, denominator_sum);
-        int new_num = _numerator * other._numerator;
-        int new_den = _denominator * other._denominator;
-        return Fraction(new_num, new_den);
+        int new_num = fraction1._numerator * fraction2._numerator;
+        int new_den = fraction1._denominator * fraction2._denominator;
+        Fraction res(new_num, new_den);
+        res.reduce();
+        return res;
     }
 
-    Fraction Fraction::operator*(const float &number) const {
-        return *this * Fraction(number);
-    }
-
-    Fraction operator*(const float &number, const Fraction &other) {
-        return Fraction(number) * other;
-    }
-
-    Fraction Fraction::operator/(const Fraction &other) const {
-        if (other._numerator == 0) throw runtime_error("Cannot divide by zero");
-        long numerator_sum = static_cast<long>(_numerator) * other._denominator;
-        long denominator_sum = static_cast<long>(_denominator) * other._numerator;
+    Fraction operator/(const Fraction &fraction1, const Fraction &fraction2) {
+        if (fraction2._numerator == 0) throw runtime_error("Cannot divide by zero");
+        long numerator_sum = static_cast<long>(fraction1._numerator) * fraction2._denominator;
+        long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._numerator;
         checkOverflow(numerator_sum, denominator_sum);
-        int new_num = _numerator * other._denominator;
-        int new_den = _denominator * other._numerator;
-        return Fraction(new_num, new_den);
+        int new_num = fraction1._numerator * fraction2._denominator;
+        int new_den = fraction1._denominator * fraction2._numerator;
+        Fraction res(new_num, new_den);
+        res.reduce();
+        return res;
     }
 
-    Fraction Fraction::operator/(const float &number) const {
-        return *this / Fraction(number);
+    bool operator==(const Fraction &fraction1, const Fraction &fraction2) {
+        int frac1 = (int) (fraction1._numerator * 1000 / fraction1._denominator) % 1000;
+        int frac2 = (int) (fraction2._numerator * 1000 / fraction2._denominator) % 1000;
+        return frac1 == frac2;
     }
 
-    Fraction operator/(const float &number, const Fraction &other) {
-        return Fraction(number) / other;
+    bool operator>(const Fraction &fraction1, const Fraction &fraction2) {
+        return (fraction1._numerator * fraction2._denominator) > (fraction2._numerator * fraction1._denominator);
     }
 
-    bool Fraction::operator==(const Fraction &other) const {
-        return ((_numerator * other._denominator) == (_denominator * other._numerator));
+    bool operator<(const Fraction &fraction1, const Fraction &fraction2) {
+        return (fraction1._numerator * fraction2._denominator) < (fraction2._numerator * fraction1._denominator);
     }
 
-    bool Fraction::operator==(const float &number) const {
-        return *this == Fraction(number);
+    bool operator>=(const Fraction &fraction1, const Fraction &fraction2) {
+        return !(fraction1 < fraction2);
     }
 
-    bool operator==(const float &number, const Fraction &other) {
-        return Fraction(number) == other;
-    }
-
-    bool Fraction::operator<(const Fraction &other) const {
-        return (_numerator * other._denominator) < (other._numerator * _denominator);
-    }
-
-    bool Fraction::operator<(const float &number) const {
-        return *this < Fraction(number);
-    }
-
-    bool operator<(const float &number, const Fraction &other) {
-        return Fraction(number) < other;
-    }
-
-    bool Fraction::operator>(const Fraction &other) const {
-        return (_numerator * other._denominator) > (other._numerator * _denominator);
-    }
-
-    bool Fraction::operator>(const float &number) const {
-        return *this > Fraction(number);
-    }
-
-    bool operator>(const float &number, const Fraction &other) {
-        return Fraction(number) > other;
-    }
-
-    bool Fraction::operator>=(const Fraction &other) const {
-        return !(*this < other);
-    }
-
-    bool Fraction::operator>=(const float &number) const {
-        return !(*this < Fraction(number));
-    }
-
-    bool operator>=(const float &number, const Fraction &other) {
-        return !(Fraction(number) < other);
-    }
-
-    bool Fraction::operator<=(const Fraction &other) const {
-        return !(*this > other);
-    }
-
-    bool Fraction::operator<=(const float &number) const {
-        return !(*this > Fraction(number));
-    }
-
-    bool operator<=(const float &number, const Fraction &other) {
-        return !(Fraction(number) > other);
+    bool operator<=(const Fraction &fraction1, const Fraction &fraction2) {
+        return !(fraction1 > fraction2);
     }
 
     // pre-increment
@@ -242,10 +169,11 @@ namespace ariel {
         return input;
     }
 
-    void Fraction::checkOverflow(long numerator_sum, long denominator_sum) const {
+    void checkOverflow(long numerator_sum, long denominator_sum) {
         if (numerator_sum > INT_MAX || denominator_sum > INT_MAX || numerator_sum < INT_MIN ||
             denominator_sum < INT_MIN) {
             throw overflow_error("Fraction result is too large to be represented as an integer");
         }
     }
+
 }
