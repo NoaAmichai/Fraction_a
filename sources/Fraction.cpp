@@ -4,18 +4,16 @@
 
 using namespace std;
 namespace ariel {
-    Fraction::Fraction() : _numerator(0), _denominator(1) {}
+    Fraction::Fraction() : _numerator(0), _denominator(1) {}  // Default constructor
 
     Fraction::Fraction(int num, int den) : _numerator(num), _denominator(den) {
         if (num != 0 && den == 0) {
             throw std::invalid_argument("Denominator cannot be zero.");
         }
-        if (num > INT_MAX || den > INT_MAX) {
-            throw overflow_error("Numerator or denominator is too large.");
-        }
         reduce();
     }
 
+    // Constructor that receives a float number, and converts it to a fraction with 3 decimal places
     Fraction::Fraction(float number) : _numerator(number * 1000), _denominator(1000) {
         reduce();
     }
@@ -39,11 +37,12 @@ namespace ariel {
         }
     }
 
-// Calculates the greatest common divisor (GCD) of two integers
+    // Calculates the greatest common divisor (GCD) of two integers
     int Fraction::gcd(int a, int b) {
         return b == 0 ? a : gcd(b, a % b);
     }
 
+    // Overloads the + operator to perform addition of two fractions
     Fraction operator+(const Fraction &fraction1, const Fraction &fraction2) {
         long numerator_sum =
                 static_cast<long>(fraction1._numerator) * fraction2._denominator +
@@ -58,7 +57,7 @@ namespace ariel {
         return res;
     }
 
-
+    // Overloads the - operator to perform subtraction of two fractions
     Fraction operator-(const Fraction &fraction1, const Fraction &fraction2) {
         long numerator_sum =
                 static_cast<long>(fraction1._numerator) * fraction2._denominator -
@@ -73,6 +72,7 @@ namespace ariel {
         return res;
     }
 
+    // Overloads the * operator to perform multiplication of two fractions
     Fraction operator*(const Fraction &fraction1, const Fraction &fraction2) {
         long numerator_sum = static_cast<long>(fraction1._numerator) * fraction2._numerator;
         long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
@@ -84,6 +84,7 @@ namespace ariel {
         return res;
     }
 
+    // Overloads the / operator to perform division of two fractions
     Fraction operator/(const Fraction &fraction1, const Fraction &fraction2) {
         if (fraction2._numerator == 0) throw runtime_error("Cannot divide by zero");
         long numerator_sum = static_cast<long>(fraction1._numerator) * fraction2._denominator;
@@ -96,6 +97,7 @@ namespace ariel {
         return res;
     }
 
+    //Overloads comparison operator to check if two fractions are equal
     bool operator==(const Fraction &fraction1, const Fraction &fraction2) {
         int frac1 = (int) (fraction1._numerator * 1000 / fraction1._denominator) % 1000;
         int frac2 = (int) (fraction2._numerator * 1000 / fraction2._denominator) % 1000;
@@ -152,23 +154,17 @@ namespace ariel {
     }
 
     std::istream &operator>>(std::istream &input, Fraction &fraction) {
-//        char comma_or_space;
         if (!(input >> fraction._numerator)) {
             throw runtime_error("Invalid numerator");
         }
-//        if (!(input >> comma_or_space) || (comma_or_space != ',' && comma_or_space != ' ')) {
-//            throw std::invalid_argument("Invalid separator");
-//        }
         if (!(input >> fraction._denominator)) {
             throw runtime_error("Invalid denominator");
         }
-        if (fraction._denominator < 0) {
-            fraction._numerator = -1 * fraction._numerator;
-            fraction._denominator = abs(fraction._denominator);
-        }
+        fraction.reduce();
         return input;
     }
 
+    // Helper function to check if the result is integer overflow
     void checkOverflow(long numerator_sum, long denominator_sum) {
         if (numerator_sum > INT_MAX || denominator_sum > INT_MAX || numerator_sum < INT_MIN ||
             denominator_sum < INT_MIN) {
