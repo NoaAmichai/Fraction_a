@@ -7,7 +7,7 @@ namespace ariel {
     Fraction::Fraction() : _numerator(0), _denominator(1) {}  // Default constructor
 
     Fraction::Fraction(int num, int den) : _numerator(num), _denominator(den) {
-        if (num != 0 && den == 0) {
+        if (den == 0) {
             throw std::invalid_argument("Denominator cannot be zero.");
         }
         reduce();
@@ -99,8 +99,8 @@ namespace ariel {
 
     //Overloads comparison operator to check if two fractions are equal
     bool operator==(const Fraction &fraction1, const Fraction &fraction2) {
-        int frac1 = (int) (fraction1._numerator * 1000 / fraction1._denominator) % 1000;
-        int frac2 = (int) (fraction2._numerator * 1000 / fraction2._denominator) % 1000;
+        float frac1 = (float) (fraction1._numerator * 1000 / fraction1._denominator) / 1000;
+        float frac2 = (float) (fraction2._numerator * 1000 / fraction2._denominator) / 1000;
         return frac1 == frac2;
     }
 
@@ -123,29 +123,29 @@ namespace ariel {
     // pre-increment
     Fraction &Fraction::operator++() {
         _numerator += _denominator;
+        reduce();
         return *this;
     }
 
     // post-increment
     Fraction Fraction::operator++(int) {
-        int temp_num = _numerator;
-        int temp_den = _denominator;
-        _numerator += _denominator;
-        return Fraction(temp_num, temp_den);
+        Fraction temp(_numerator, _denominator);
+        ++(*this);
+        return temp;
     }
 
     // pre-increment
     Fraction &Fraction::operator--() {
         _numerator -= _denominator;
+        reduce();
         return *this;
     }
 
     // post-increment
     Fraction Fraction::operator--(int) {
-        int temp_num = _numerator;
-        int temp_den = _denominator;
-        _numerator -= _denominator;
-        return Fraction(temp_num, temp_den);
+        Fraction temp(_numerator, _denominator);
+        --(*this);
+        return temp;
     }
 
     std::ostream &operator<<(ostream &output, const Fraction &fraction) {
@@ -157,7 +157,7 @@ namespace ariel {
         if (!(input >> fraction._numerator)) {
             throw runtime_error("Invalid numerator");
         }
-        if (!(input >> fraction._denominator)) {
+        if (!(input >> fraction._denominator) || (fraction._denominator == 0)) {
             throw runtime_error("Invalid denominator");
         }
         fraction.reduce();
