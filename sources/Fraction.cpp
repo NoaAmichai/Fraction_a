@@ -88,9 +88,6 @@ namespace ariel {
 
     //Overloads comparison operator to check if two fractions are equal
     bool operator==(const Fraction &fraction1, const Fraction &fraction2) {
-//        float frac1 = (float) (fraction1._numerator * 1000 / fraction1._denominator) / 1000;
-//        float frac2 = (float) (fraction2._numerator * 1000 / fraction2._denominator) / 1000;
-
         return fraction1._numerator == fraction2._numerator && fraction1._denominator == fraction2._denominator;
     }
 
