@@ -49,10 +49,7 @@ namespace ariel {
                 static_cast<long>(fraction2._numerator) * fraction1._denominator;
         long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
         checkOverflow(numerator_sum, denominator_sum);
-        int new_num = fraction1._numerator * fraction2._denominator +
-                      fraction1._denominator * fraction2._numerator;
-        int new_den = fraction1._denominator * fraction2._denominator;
-        Fraction res(new_num, new_den);
+        Fraction res((int) numerator_sum, (int) denominator_sum);
         res.reduce();
         return res;
     }
@@ -64,10 +61,7 @@ namespace ariel {
                 static_cast<long>(fraction2._numerator) * fraction1._denominator;
         long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
         checkOverflow(numerator_sum, denominator_sum);
-        int new_num = fraction1._numerator * fraction2._denominator -
-                      fraction1._denominator * fraction2._numerator;
-        int new_den = fraction1._denominator * fraction2._denominator;
-        Fraction res(new_num, new_den);
+        Fraction res((int)numerator_sum, (int)denominator_sum);
         res.reduce();
         return res;
     }
@@ -77,9 +71,7 @@ namespace ariel {
         long numerator_sum = static_cast<long>(fraction1._numerator) * fraction2._numerator;
         long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
         checkOverflow(numerator_sum, denominator_sum);
-        int new_num = fraction1._numerator * fraction2._numerator;
-        int new_den = fraction1._denominator * fraction2._denominator;
-        Fraction res(new_num, new_den);
+        Fraction res( (int) numerator_sum, (int) denominator_sum);
         res.reduce();
         return res;
     }
@@ -90,9 +82,7 @@ namespace ariel {
         long numerator_sum = static_cast<long>(fraction1._numerator) * fraction2._denominator;
         long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._numerator;
         checkOverflow(numerator_sum, denominator_sum);
-        int new_num = fraction1._numerator * fraction2._denominator;
-        int new_den = fraction1._denominator * fraction2._numerator;
-        Fraction res(new_num, new_den);
+        Fraction res( (int) numerator_sum, (int) denominator_sum);
         res.reduce();
         return res;
     }
