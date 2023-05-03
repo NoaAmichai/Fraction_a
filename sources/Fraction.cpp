@@ -1,4 +1,3 @@
-#include <cmath>
 #include <climits>
 #include "Fraction.hpp"
 
@@ -61,7 +60,7 @@ namespace ariel {
                 static_cast<long>(fraction2._numerator) * fraction1._denominator;
         long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
         checkOverflow(numerator_sum, denominator_sum);
-        Fraction res((int)numerator_sum, (int)denominator_sum);
+        Fraction res((int) numerator_sum, (int) denominator_sum);
         res.reduce();
         return res;
     }
@@ -71,7 +70,7 @@ namespace ariel {
         long numerator_sum = static_cast<long>(fraction1._numerator) * fraction2._numerator;
         long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._denominator;
         checkOverflow(numerator_sum, denominator_sum);
-        Fraction res( (int) numerator_sum, (int) denominator_sum);
+        Fraction res((int) numerator_sum, (int) denominator_sum);
         res.reduce();
         return res;
     }
@@ -82,16 +81,17 @@ namespace ariel {
         long numerator_sum = static_cast<long>(fraction1._numerator) * fraction2._denominator;
         long denominator_sum = static_cast<long>(fraction1._denominator) * fraction2._numerator;
         checkOverflow(numerator_sum, denominator_sum);
-        Fraction res( (int) numerator_sum, (int) denominator_sum);
+        Fraction res((int) numerator_sum, (int) denominator_sum);
         res.reduce();
         return res;
     }
 
     //Overloads comparison operator to check if two fractions are equal
     bool operator==(const Fraction &fraction1, const Fraction &fraction2) {
-        float frac1 = (float) (fraction1._numerator * 1000 / fraction1._denominator) / 1000;
-        float frac2 = (float) (fraction2._numerator * 1000 / fraction2._denominator) / 1000;
-        return frac1 == frac2;
+//        float frac1 = (float) (fraction1._numerator * 1000 / fraction1._denominator) / 1000;
+//        float frac2 = (float) (fraction2._numerator * 1000 / fraction2._denominator) / 1000;
+
+        return fraction1._numerator == fraction2._numerator && fraction1._denominator == fraction2._denominator;
     }
 
     bool operator>(const Fraction &fraction1, const Fraction &fraction2) {
